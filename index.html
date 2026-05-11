@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>webp converter</title>
+
+    <!-- Favicon inline SVG -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f172a'/><text x='50%25' y='54%25' font-size='18' font-family='system-ui,sans-serif' font-weight='700' fill='%23eab308' text-anchor='middle' dominant-baseline='middle'>W</text></svg>"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- NAV -->
+      <nav>
+        <div class="nav-logo">
+          webp<span class="logo-dot">.</span>convert
+          <span class="nav-sep">/</span> local
+        </div>
+        <div class="nav-badge" id="nav-badge">
+          <div class="nav-dot"></div>
+          aucun upload
+        </div>
+      </nav>
+
+      <main>
+        <!-- ═══ SUMMARY STICKY ═══════════════════════════════════ -->
+        <div class="summary-bar" id="summary-bar">
+          <div class="sb-stat">
+            <span class="sb-label">Convertis</span>
+            <span class="sb-val" id="sc">0</span>
+          </div>
+          <div class="sb-divider"></div>
+          <div class="sb-stat">
+            <span class="sb-label">Avant</span>
+            <span class="sb-val sb-before" id="sb">—</span>
+          </div>
+          <div class="sb-arrow"><i class="ti ti-arrow-right"></i></div>
+          <div class="sb-stat">
+            <span class="sb-label">Après</span>
+            <span class="sb-val sb-after" id="sa">—</span>
+          </div>
+          <div class="sb-divider"></div>
+          <div class="sb-stat">
+            <span class="sb-label">Économie</span>
+            <span class="sb-val sb-gain" id="ss">—</span>
+          </div>
+          <button class="btn-primary sb-zip" id="btn-zip2">
+            <i class="ti ti-download"></i> Télécharger ZIP
+          </button>
+        </div>
+
+        <!-- ═══ PRESETS ══════════════════════════════════════════ -->
+        <div class="block-label">Mode rapide</div>
+        <div class="presets-row">
+          <button
+            class="preset-card"
+            data-preset="web"
+            data-quality="80"
+            data-method="4"
+            data-lossless="0"
+          >
+            <div class="preset-icon"><i class="ti ti-world"></i></div>
+            <div class="preset-info">
+              <span class="preset-name">Web</span
+              ><span class="preset-desc"
+                >Léger · rapide · qualité correcte</span
+              >
+            </div>
+            <div class="preset-badge">80%</div>
+          </button>
+          <button
+            class="preset-card"
+            data-preset="photo"
+            data-quality="90"
+            data-method="6"
+            data-lossless="0"
+          >
+            <div class="preset-icon"><i class="ti ti-camera"></i></div>
+            <div class="preset-info">
+              <span class="preset-name">Photo</span
+              ><span class="preset-desc"
+                >Haute qualité · détails préservés</span
+              >
+            </div>
+            <div class="preset-badge">90%</div>
+          </button>
+          <button
+            class="preset-card"
+            data-preset="max"
+            data-quality="100"
+            data-method="6"
+            data-lossless="1"
+          >
+            <div class="preset-icon"><i class="ti ti-diamond"></i></div>
+            <div class="preset-info">
+              <span class="preset-name">Lossless</span
+              ><span class="preset-desc">Aucune perte · fichier lourd</span>
+            </div>
+            <div class="preset-badge">100%</div>
+          </button>
+          <button
+            class="preset-card"
+            data-preset="turbo"
+            data-quality="65"
+            data-method="0"
+            data-lossless="0"
+          >
+            <div class="preset-icon"><i class="ti ti-bolt"></i></div>
+            <div class="preset-info">
+              <span class="preset-name">Turbo</span
+              ><span class="preset-desc">Ultra-léger · réseaux lents</span>
+            </div>
+            <div class="preset-badge">65%</div>
+          </button>
+        </div>
+
+        <!-- ═══ SETTINGS ═════════════════════════════════════════ -->
+        <div class="block-label" style="margin-top: 32px">Paramètres fins</div>
+        <div class="settings-panel">
+          <div class="settings-row">
+            <!-- Qualité -->
+            <div class="sg">
+              <div class="sg-header">
+                <span class="sg-label">Qualité</span>
+                <div class="quality-badge">
+                  <span id="qv">82</span><span class="quality-unit">%</span>
+                </div>
+              </div>
+              <input
+                type="range"
+                id="quality"
+                min="1"
+                max="100"
+                value="82"
+                step="1"
+              />
+              <div class="quality-hints">
+                <span>Basse</span><span>Optimale</span><span>Max</span>
+              </div>
+            </div>
+            <!-- Compression -->
+            <div class="sg">
+              <div class="sg-label">Mode de compression</div>
+              <div class="sg-desc">Vitesse vs qualité de l'encodeur WebP</div>
+              <select id="method">
+                <option value="6">Max — meilleure qualité</option>
+                <option value="4" selected>Équilibrée — recommandée</option>
+                <option value="2">Rapide</option>
+                <option value="0">Ultra-rapide</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <!-- Redimensionnement amélioré -->
+            <div class="sg">
+              <div class="sg-label">Redimensionnement</div>
+              <div class="sg-desc">
+                Pixels exacts ou pourcentage de l'original
+              </div>
+
+              <label class="toggle-row">
+                <input type="checkbox" id="ren" />
+                <span class="toggle-track"
+                  ><span class="toggle-thumb"></span
+                ></span>
+                <span class="toggle-text">Activer le resize</span>
+              </label>
+
+              <div class="resize-inputs" id="resize-row">
+                <!-- mode selector -->
+                <div class="resize-mode-tabs">
+                  <button class="rmode-tab active" data-mode="px">px</button>
+                  <button class="rmode-tab" data-mode="pct">%</button>
+                </div>
+
+                <!-- mode px -->
+                <div class="resize-px-fields" id="resize-px">
+                  <div class="resize-field">
+                    <span class="resize-label">L</span>
+                    <input
+                      type="number"
+                      id="rw"
+                      placeholder="1920"
+                      min="1"
+                      max="8000"
+                    />
+                    <span class="resize-unit">px</span>
+                  </div>
+                  <span class="resize-sep">×</span>
+                  <div class="resize-field">
+                    <span class="resize-label">H</span>
+                    <input
+                      type="number"
+                      id="rh"
+                      placeholder="1080"
+                      min="1"
+                      max="8000"
+                    />
+                    <span class="resize-unit">px</span>
+                  </div>
+                </div>
+
+                <!-- mode % -->
+                <div class="resize-pct-fields hidden" id="resize-pct">
+                  <div class="pct-presets">
+                    <button class="pct-btn" data-pct="25">25%</button>
+                    <button class="pct-btn" data-pct="50">50%</button>
+                    <button class="pct-btn" data-pct="75">75%</button>
+                    <button class="pct-btn" data-pct="150">150%</button>
+                    <button class="pct-btn" data-pct="200">200%</button>
+                  </div>
+                  <div class="pct-custom-row">
+                    <span class="resize-label">Ou</span>
+                    <input
+                      type="number"
+                      id="rpct"
+                      placeholder="80"
+                      min="1"
+                      max="500"
+                    />
+                    <span class="resize-unit">%</span>
+                  </div>
+                </div>
+
+                <!-- keep ratio -->
+                <label class="chk-inline">
+                  <input type="checkbox" id="kr" checked />
+                  <span>Ratio proportionnel</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Options -->
+            <div class="sg">
+              <div class="sg-label">Options avancées</div>
+              <div class="sg-desc">Contrôle fin du rendu final</div>
+              <div class="options-list">
+                <label class="option-card">
+                  <input type="checkbox" id="ll" />
+                  <div class="option-body">
+                    <span class="option-name">Lossless</span>
+                    <span class="option-hint"
+                      >Aucune perte — fichier plus lourd</span
+                    >
+                  </div>
+                  <span class="option-check"><i class="ti ti-check"></i></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ DROP ══════════════════════════════════════════════ -->
+        <div class="drop" id="drop">
+          <input type="file" id="fi" multiple accept="image/*,.heic,.heif" />
+          <div class="drop-icon"><i class="ti ti-cloud-upload"></i></div>
+          <div class="drop-title">Glissez vos images ici</div>
+          <div class="drop-sub">ou cliquez pour sélectionner des fichiers</div>
+          <div class="fmts">
+            <span class="fmt">jpg</span><span class="fmt">png</span
+            ><span class="fmt">gif</span> <span class="fmt">svg</span
+            ><span class="fmt">avif</span><span class="fmt">heic</span
+            ><span class="fmt">webp</span>
+          </div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar" id="toolbar">
+          <div class="t-count" id="tcount"></div>
+          <div class="t-actions">
+            <button id="btn-clear"><i class="ti ti-trash"></i> Vider</button>
+            <button id="btn-convert" disabled>
+              <i class="ti ti-refresh"></i> Convertir tout
+            </button>
+            <button class="btn-primary" id="btn-zip" disabled>
+              <i class="ti ti-download"></i> ZIP
+            </button>
+          </div>
+        </div>
+
+        <div class="progress" id="progress">
+          <div class="progress-bar" id="pbar"></div>
+        </div>
+
+        <!-- GRID -->
+        <div class="grid" id="grid"></div>
+      </main>
+
+      <!-- ═══ MODAL avant/après ════════════════════════════════ -->
+      <div class="mo" id="mo">
+        <div class="mglass">
+          <div class="mhead">
+            <div class="mhead-left">
+              <span class="mfname" id="mfname">—</span>
+              <div class="mpills">
+                <div class="mpill mpill-before">
+                  <i class="ti ti-file"></i>
+                  <div class="mpill-data">
+                    <span class="mpill-label">Avant</span><b id="mbl">—</b>
+                  </div>
+                </div>
+                <div class="mpill-arrow"><i class="ti ti-arrow-right"></i></div>
+                <div class="mpill mpill-after">
+                  <i class="ti ti-file-zip"></i>
+                  <div class="mpill-data">
+                    <span class="mpill-label">Après</span><b id="mal">—</b>
+                  </div>
+                </div>
+                <div class="mpill mpill-gain">
+                  <i class="ti ti-trending-down"></i>
+                  <div class="mpill-data">
+                    <span class="mpill-label">Économie</span><b id="mgain">—</b>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mhead-right">
+              <button class="mbtn-close" id="mclose" aria-label="Fermer">
+                ✕
+              </button>
+            </div>
+          </div>
+          <div class="mstage" id="mstage">
+            <div class="mlayer mlayer-after">
+              <img id="mimg-after" src="" alt="après" />
+            </div>
+            <div class="mlayer mlayer-before" id="mlayer-before">
+              <img id="mimg-before" src="" alt="avant" />
+            </div>
+            <div class="mdiv" id="mdivider"></div>
+            <div class="mhandle" id="mhandle">
+              <i class="ti ti-arrows-left-right"></i> Glisser
+            </div>
+            <span class="mcorner mcorner-before"
+              ><span class="mcorner-dot"></span> Avant</span
+            >
+            <span class="mcorner mcorner-after"
+              ><span class="mcorner-dot"></span> Après</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ RENAME MODAL ═════════════════════════════════════ -->
+      <div class="rename-mo" id="rename-mo">
+        <div class="rename-glass">
+          <div class="rename-head">
+            <span>Renommer le fichier</span>
+            <button class="mbtn-close" id="rename-close">✕</button>
+          </div>
+          <div class="rename-body">
+            <label class="rename-label"
+              >Nouveau nom
+              <span class="rename-ext" id="rename-ext">.webp</span></label
+            >
+            <input
+              type="text"
+              id="rename-input"
+              class="rename-input"
+              placeholder="mon-image"
+              autocomplete="off"
+            />
+            <div class="rename-actions">
+              <button id="rename-cancel">Annuler</button>
+              <button class="btn-primary" id="rename-confirm">
+                <i class="ti ti-check"></i> Renommer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toasts" id="toasts"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
